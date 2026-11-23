@@ -1,0 +1,23 @@
+{
+  "name": "AnkiDocComments",
+  "package": "ankidoccomments",
+  "version": "1.0.0",
+  "description": "Google Docs-style inline comments for Anki Reviewer",
+  "author": "AnkiDocComments Contributors",
+  "homepage": "https://github.com/ankidoccomments/ankidoccomments",
+  "min_point_version": 50,
+  "max_point_version": 65,
+  "license": "MIT",
+  "config": {
+    "language": "vi",
+    "trigger_mode": "hover",
+    "highlight_colors": {
+      "light": "#fff0b3",
+      "dark": "#4a421b",
+      "resolved_light": "#e0e0e0",
+      "resolved_dark": "#3a3a3a"
+    },
+    "sidebar_width": 320,
+    "timestamp_format": "YYYY-MM-DD HH:mm"
+  }
+}

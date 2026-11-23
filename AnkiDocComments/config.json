@@ -1,0 +1,12 @@
+{
+  "language": "vi",
+  "trigger_mode": "hover",
+  "highlight_colors": {
+    "light": "#fff0b3",
+    "dark": "#4a421b",
+    "resolved_light": "#e0e0e0",
+    "resolved_dark": "#3a3a3a"
+  },
+  "sidebar_width": 320,
+  "timestamp_format": "YYYY-MM-DD HH:mm"
+}
