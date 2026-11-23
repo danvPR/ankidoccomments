@@ -25,12 +25,8 @@ I built this because throwing notes into an `Extra` field gets messy fast on lon
 
 ## Installation
 
-Download or clone this repo into your Anki `addons21` directory, then restart Anki:
-
-- **Windows:** `%APPDATA%\Anki2\addons21\AnkiDocComments`
-- **macOS:** `~/Library/Application Support/Anki2/addons21/AnkiDocComments`
-- **Linux:** `~/.local/share/Anki2/addons21/AnkiDocComments`
-
+<img width="1342" height="748" alt="image" src="https://github.com/user-attachments/assets/7bb86b46-3945-4f36-922a-bdef90c6541e" />
+CODE: 1367430865
 Targets Anki 2.1.50+ (point versions 50–65 in `manifest.json`).
 
 ## Usage
