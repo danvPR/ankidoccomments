@@ -11,7 +11,7 @@ I built this because throwing notes into an `Extra` field gets messy fast on lon
 <img width="968" height="506" alt="image" src="https://github.com/user-attachments/assets/ee075c19-f31e-42da-92f9-d2d7e15c1c40" />
 
 
-**On Desktop (full editing):**
+**On Desktop:**
 - Select text in the Reviewer (front or back), right-click, and pick **Add comment**.
 - Format notes with bold, italics, underline, lists, blockquotes, links, text color, and click-to-reveal spoilers.
 - Reply in threads, edit or delete individual replies, delete the whole thread, or mark it as resolved.
@@ -19,7 +19,7 @@ I built this because throwing notes into an `Extra` field gets messy fast on lon
 - Uses your current Anki profile name as the author.
 <img width="1351" height="726" alt="image" src="https://github.com/user-attachments/assets/81b3e2f9-5273-458c-a4c3-6a2d4aab87ee" />
 
-**On Mobile — AnkiDroid / AnkiMobile (read-only):**
+**On AnkiDroid or AnkiMobile (read-only):**
 - Tap highlighted text to read threads, reveal spoilers, and follow dark mode styling.
 - Runs via a snippet injected into your card template (no mobile add-on needed, and automatically skips on desktop).
 
