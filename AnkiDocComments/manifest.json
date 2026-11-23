@@ -9,7 +9,7 @@
   "max_point_version": 65,
   "license": "MIT",
   "config": {
-    "language": "vi",
+    "language": "en",
     "trigger_mode": "hover",
     "highlight_colors": {
       "light": "#fff0b3",

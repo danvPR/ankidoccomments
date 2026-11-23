@@ -26,6 +26,7 @@ class SettingsDialog(QDialog):
         self.language_combo = QComboBox()
         self.language_combo.addItem("Tiếng Việt", "vi")
         self.language_combo.addItem("English", "en")
+        self.language_combo.setCurrentIndex(1)
         layout.addWidget(QLabel("Language / Ngôn ngữ:"))
         layout.addWidget(self.language_combo)
 
@@ -77,9 +78,9 @@ class SettingsDialog(QDialog):
         layout.addWidget(button_box)
 
     def load_config(self):
-        language = self.config.get("language", "vi")
+        language = self.config.get("language", "en")
         index = self.language_combo.findData(language)
-        self.language_combo.setCurrentIndex(index if index >= 0 else 0)
+        self.language_combo.setCurrentIndex(index if index >= 0 else 1)
         self.trigger_combo.setCurrentText(self.config.get("trigger_mode", "hover"))
 
         colors = self.config.get("highlight_colors", {})

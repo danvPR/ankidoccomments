@@ -2,7 +2,7 @@ import json
 import os
 
 from aqt import mw, gui_hooks
-from aqt.qt import QAction, QApplication, QInputDialog
+from aqt.qt import QAction, QApplication, QDesktopServices, QInputDialog, QUrl
 from aqt.webview import WebContent
 from aqt.reviewer import Reviewer
 from aqt.utils import showInfo, showWarning
@@ -19,6 +19,7 @@ COMMENTS_JS = ""
 ADDON_DIR = os.path.dirname(__file__)
 current_review_note_id = None
 ADDON_PACKAGE = __package__.split(".")[0] if __package__ else "AnkiDocComments"
+GITHUB_URL = "https://github.com/danvPR/ankidoccomments/"
 
 try:
     with open(os.path.join(ADDON_DIR, "web", "comments.css"), "r", encoding="utf-8") as f:
@@ -116,7 +117,7 @@ def on_webview_will_show_context_menu(webview, menu) -> None:
         return
 
     menu.addSeparator()
-    language = get_config().get("language", "vi")
+    language = get_config().get("language", "en")
     add_comment_action = menu.addAction("Add comment" if language == "en" else "Thêm nhận xét")
     add_comment_action.triggered.connect(
         lambda _checked=False: webview.eval(
@@ -197,18 +198,18 @@ def ensure_language_selected() -> None:
         "AnkiDocComments - Language / Ngôn ngữ",
         "Chọn ngôn ngữ / Choose language:",
         names,
-        0,
+        1,
         False,
     )
     if not confirmed:
-        name = "Tiếng Việt"
+        name = "English"
 
     config["language"] = "vi" if name == "Tiếng Việt" else "en"
     mw.addonManager.writeConfig(ADDON_PACKAGE, config)
 
 
 def setup_menu() -> None:
-    language = get_config().get("language", "vi")
+    language = get_config().get("language", "en")
     localized = {
         "vi": {
             "addon": "AnkiDocComments",
@@ -216,6 +217,7 @@ def setup_menu() -> None:
             "add": "Thêm/cập nhật mã di động vào kiểu thẻ...",
             "remove": "Gỡ mã di động khỏi kiểu thẻ...",
             "settings": "Cài đặt",
+            "github": "Mã nguồn trên GitHub",
         },
         "en": {
             "addon": "AnkiDocComments",
@@ -223,6 +225,7 @@ def setup_menu() -> None:
             "add": "Add/update mobile script for a note type...",
             "remove": "Remove mobile script from a note type...",
             "settings": "Settings",
+            "github": "Source code on GitHub",
         },
     }[language]
     menu = mw.form.menuTools
@@ -247,6 +250,12 @@ def setup_menu() -> None:
     settings_action = QAction(localized["settings"], mw)
     settings_action.triggered.connect(open_settings)
     submenu.addAction(settings_action)
+
+    github_action = QAction(localized["github"], mw)
+    github_action.triggered.connect(
+        lambda _checked=False: QDesktopServices.openUrl(QUrl(GITHUB_URL))
+    )
+    submenu.addAction(github_action)
 
 
 def init_addon() -> None:

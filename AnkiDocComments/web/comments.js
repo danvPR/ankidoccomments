@@ -62,10 +62,10 @@
     },
   };
 
-  let currentLanguage = "vi";
+  let currentLanguage = "en";
   function t(key) {
     return (translations[currentLanguage] && translations[currentLanguage][key])
-      || translations.vi[key]
+      || translations.en[key]
       || key;
   }
 
@@ -78,7 +78,7 @@
   window.ankiDocCommentsInit = function (payload) {
     lastSelection = null;
     currentPayload = payload;
-    currentLanguage = payload && payload.config && payload.config.language === "en" ? "en" : "vi";
+    currentLanguage = payload && payload.config && payload.config.language === "vi" ? "vi" : "en";
     if (activePopover) {
       activePopover.remove();
       activePopover = null;
@@ -422,10 +422,14 @@
 
   function updateDataDiv(field, comments) {
     if (!field) return;
-    const dataDiv = document.getElementById("anki-comments-data-" + field);
-    if (dataDiv) {
-      dataDiv.textContent = JSON.stringify(comments);
+    let dataDiv = document.getElementById("anki-comments-data-" + field);
+    if (!dataDiv) {
+      dataDiv = document.createElement("div");
+      dataDiv.id = "anki-comments-data-" + field;
+      dataDiv.style.display = "none";
+      document.body.appendChild(dataDiv);
     }
+    dataDiv.textContent = JSON.stringify(comments);
   }
 
   function positionPopover(popover, rect) {
