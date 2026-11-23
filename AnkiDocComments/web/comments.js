@@ -73,6 +73,12 @@
   let activePopover = null;
   let mousedownHandler = null;
   let markHoverHandler = null;
+  let longPressTimer = null;
+  let longPressHandlersBound = false;
+  let longPressPending = false;
+  let longPressStartX = 0;
+  let longPressStartY = 0;
+  let suppressTouchContextMenuUntil = 0;
   let lastSelection = null;
 
   window.ankiDocCommentsInit = function (payload) {
@@ -88,6 +94,7 @@
 
   window.ankiDocCommentsCleanup = function () {
     document.removeEventListener("contextmenu", handleContextMenu, true);
+    unbindLongPressEvents();
     document.removeEventListener("selectionchange", trackSelection);
     document.removeEventListener("click", toggleCommentSpoiler);
     document.removeEventListener("keydown", handleCommentSpoilerKeydown);
@@ -109,6 +116,11 @@
   function bindSelectionEvents() {
     document.removeEventListener("contextmenu", handleContextMenu, true);
     document.addEventListener("contextmenu", handleContextMenu, true);
+    if (shouldEnableLongPress()) {
+      bindLongPressEvents();
+    } else {
+      unbindLongPressEvents();
+    }
 
     document.removeEventListener("selectionchange", trackSelection);
     document.addEventListener("selectionchange", trackSelection);
@@ -192,13 +204,87 @@
     }
   }
 
-  function handleContextMenu() {
+  function handleContextMenu(event) {
+    if (longPressPending || Date.now() < suppressTouchContextMenuUntil) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
     const sel = window.getSelection();
     if (!sel || sel.isCollapsed || !sel.toString().trim()) {
       lastSelection = null;
       return;
     }
     trackSelection();
+  }
+
+  function shouldEnableLongPress() {
+    const trigger = currentPayload && currentPayload.config
+      ? currentPayload.config.add_comment_trigger
+      : "context_menu";
+    return trigger === "long_press" || trigger === "both";
+  }
+
+  function clearLongPressTimer() {
+    if (longPressTimer !== null) {
+      window.clearTimeout(longPressTimer);
+      longPressTimer = null;
+    }
+    longPressPending = false;
+  }
+
+  function handleTouchStart(event) {
+    clearLongPressTimer();
+    if (event.touches.length !== 1 || !lastSelection
+      || Date.now() - lastSelection.time > 30000) return;
+
+    const touch = event.touches[0];
+    const rect = lastSelection.rect;
+    if (touch.clientX < rect.left - 8 || touch.clientX > rect.right + 8
+      || touch.clientY < rect.top - 8 || touch.clientY > rect.bottom + 8) return;
+
+    const selectionAtStart = lastSelection;
+    longPressStartX = touch.clientX;
+    longPressStartY = touch.clientY;
+    longPressPending = true;
+    longPressTimer = window.setTimeout(() => {
+      longPressTimer = null;
+      longPressPending = false;
+      if (lastSelection !== selectionAtStart || !shouldEnableLongPress()) return;
+      suppressTouchContextMenuUntil = Date.now() + 1000;
+      window.ankiDocCommentsOpenCommentFromSelection();
+    }, 650);
+  }
+
+  function handleTouchEnd() {
+    clearLongPressTimer();
+  }
+
+  function bindLongPressEvents() {
+    if (longPressHandlersBound) return;
+    longPressHandlersBound = true;
+    document.addEventListener("touchstart", handleTouchStart, { passive: true });
+    document.addEventListener("touchmove", handleTouchMove, { passive: true });
+    document.addEventListener("touchend", handleTouchEnd, { passive: true });
+    document.addEventListener("touchcancel", handleTouchEnd, { passive: true });
+  }
+
+  function unbindLongPressEvents() {
+    clearLongPressTimer();
+    document.removeEventListener("touchstart", handleTouchStart);
+    document.removeEventListener("touchend", handleTouchEnd);
+    document.removeEventListener("touchcancel", handleTouchEnd);
+    document.removeEventListener("touchmove", handleTouchMove);
+    longPressHandlersBound = false;
+    suppressTouchContextMenuUntil = 0;
+  }
+
+  function handleTouchMove(event) {
+    if (!longPressTimer || event.touches.length !== 1) return;
+    const touch = event.touches[0];
+    if (Math.hypot(touch.clientX - longPressStartX, touch.clientY - longPressStartY) > 10) {
+      clearLongPressTimer();
+    }
   }
 
   window.ankiDocCommentsOpenCommentFromSelection = function () {

@@ -11,6 +11,7 @@
   "config": {
     "language": "en",
     "trigger_mode": "hover",
+    "add_comment_trigger": "context_menu",
     "highlight_colors": {
       "light": "#fff0b3",
       "dark": "#4a421b",

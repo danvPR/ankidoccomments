@@ -36,6 +36,14 @@ class SettingsDialog(QDialog):
         layout.addWidget(QLabel("Trigger Mode:"))
         layout.addWidget(self.trigger_combo)
 
+        # Add comment trigger
+        self.add_comment_trigger_combo = QComboBox()
+        self.add_comment_trigger_combo.addItem("Right-click", "context_menu")
+        self.add_comment_trigger_combo.addItem("Long-press", "long_press")
+        self.add_comment_trigger_combo.addItem("Both", "both")
+        layout.addWidget(QLabel("Add Comment Trigger:"))
+        layout.addWidget(self.add_comment_trigger_combo)
+
         # Colors group
         colors_group = QGroupBox("Highlight Colors")
         colors_layout = QFormLayout(colors_group)
@@ -82,6 +90,11 @@ class SettingsDialog(QDialog):
         index = self.language_combo.findData(language)
         self.language_combo.setCurrentIndex(index if index >= 0 else 1)
         self.trigger_combo.setCurrentText(self.config.get("trigger_mode", "hover"))
+        add_comment_trigger = self.config.get("add_comment_trigger", "context_menu")
+        add_comment_trigger_index = self.add_comment_trigger_combo.findData(add_comment_trigger)
+        self.add_comment_trigger_combo.setCurrentIndex(
+            add_comment_trigger_index if add_comment_trigger_index >= 0 else 0
+        )
 
         colors = self.config.get("highlight_colors", {})
         self.color_buttons["highlight_light"].setStyleSheet(f"background-color: {colors.get('light', '#fff0b3')};")
@@ -120,6 +133,7 @@ class SettingsDialog(QDialog):
         config.update({
             "language": self.language_combo.currentData(),
             "trigger_mode": self.trigger_combo.currentText(),
+            "add_comment_trigger": self.add_comment_trigger_combo.currentData(),
             "highlight_colors": colors,
             "sidebar_width": sidebar_width,
             "timestamp_format": self.timestamp_edit.text() or "YYYY-MM-DD HH:mm",

@@ -113,6 +113,8 @@ def on_js_message(handled: tuple, message: str, context: object) -> tuple:
 def on_webview_will_show_context_menu(webview, menu) -> None:
     if not current_review_note_id or not mw.reviewer or webview is not mw.reviewer.web:
         return
+    if get_config().get("add_comment_trigger", "context_menu") not in {"context_menu", "both"}:
+        return
     if not webview.hasSelection():
         return
 
