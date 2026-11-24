@@ -1,6 +1,6 @@
 # AnkiDocComments
 
-Add Google Docs-style inline comments to your cards right inside the Anki Reviewer.
+Add tooltip inline comments to your cards right inside the Anki Reviewer.
 
 I built this because throwing notes into an `Extra` field gets messy fast on long cards—sometimes you just want to highlight a specific phrase and attach a note to it. Comments are saved directly inside the note's field HTML, so everything syncs over AnkiWeb and stays readable on mobile without any external database.
 
